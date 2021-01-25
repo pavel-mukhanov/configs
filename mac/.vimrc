@@ -1,8 +1,54 @@
+call plug#begin('~/.vim/plugged')
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'herrbischoff/cobalt2.vim'
+Plug 'autozimu/LanguageClient-neovim', { 'do': ':UpdateRemotePlugins' }
+Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+Plug 'challenger-deep-theme/vim', { 'as': 'challenger-deep' }
+Plug 'scrooloose/nerdtree'
+Plug 'itchyny/lightline.vim'
+Plug 'raichoo/purescript-vim'
+Plug 'easymotion/vim-easymotion'
+Plug 'racer-rust/vim-racer'
+Plug 'rust-lang/rust.vim' 
+Plug 'junegunn/fzf', { 'do': './install --all' }
+Plug 'junegunn/fzf.vim'
+Plug 'junegunn/goyo.vim'
+Plug 'junegunn/seoul256.vim'
+Plug 'junegunn/limelight.vim'
+Plug 'godlygeek/tabular'
+Plug 'plasticboy/vim-markdown'
+Plug 'vimwiki/vimwiki'
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-fugitive'
+Plug 'junegunn/gv.vim'
+Plug 'liuchengxu/vim-which-key'
+Plug 'aklt/plantuml-syntax'
+Plug 'scrooloose/vim-slumlord'
+Plug 'axvr/photon.vim'
+Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() } }
+Plug 'mbbill/undotree'
+Plug 'takac/vim-hardtime'
+Plug 'majutsushi/tagbar'
+Plug 'wakatime/vim-wakatime'
+Plug 'chriskempson/base16-vim'
+Plug 'udalov/kotlin-vim'
+Plug 'octol/vim-cpp-enhanced-highlight'
+Plug 'altercation/vim-colors-solarized'
+Plug 'dense-analysis/ale'
+Plug 'vifm/vifm.vim'
+Plug 'preservim/nerdcommenter'
+Plug 'ayu-theme/ayu-vim'
+Plug 'elzr/vim-json'
+Plug 'numirias/semshi', {'do': ':UpdateRemotePlugins'}
+Plug 'lervag/vimtex'
+call plug#end()
+
 let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 set termguicolors
 set background=dark
 let base16colorspace=256
-colorscheme base16-twilight
+let ayucolor="mirage"
+colorscheme ayu
 
 set nocompatible
 
@@ -107,44 +153,6 @@ if os == 'Darwin' || os == 'Mac'
   set clipboard^=unnamedplus"
 endif
 
-call plug#begin('~/.vim/plugged')
-Plug 'herrbischoff/cobalt2.vim'
-Plug 'autozimu/LanguageClient-neovim', { 'do': ':UpdateRemotePlugins' }
-Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-Plug 'challenger-deep-theme/vim', { 'as': 'challenger-deep' }
-Plug 'scrooloose/nerdtree'
-Plug 'itchyny/lightline.vim'
-Plug 'raichoo/purescript-vim'
-Plug 'easymotion/vim-easymotion'
-Plug 'racer-rust/vim-racer'
-Plug 'rust-lang/rust.vim' 
-Plug 'junegunn/fzf', { 'do': './install --all' }
-Plug 'junegunn/fzf.vim'
-Plug 'junegunn/goyo.vim'
-Plug 'junegunn/seoul256.vim'
-Plug 'junegunn/limelight.vim'
-Plug 'godlygeek/tabular'
-Plug 'plasticboy/vim-markdown'
-Plug 'vimwiki/vimwiki'
-Plug 'tpope/vim-surround'
-Plug 'tpope/vim-fugitive'
-Plug 'junegunn/gv.vim'
-Plug 'liuchengxu/vim-which-key'
-Plug 'aklt/plantuml-syntax'
-Plug 'scrooloose/vim-slumlord'
-Plug 'axvr/photon.vim'
-Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() } }
-Plug 'mbbill/undotree'
-Plug 'takac/vim-hardtime'
-Plug 'majutsushi/tagbar'
-Plug 'wakatime/vim-wakatime'
-Plug 'chriskempson/base16-vim'
-Plug 'udalov/kotlin-vim'
-Plug 'octol/vim-cpp-enhanced-highlight'
-Plug 'altercation/vim-colors-solarized'
-Plug 'dense-analysis/ale'
-Plug 'vifm/vifm.vim'
-call plug#end()
 
 " RUST
 autocmd BufReadPost *.rs setlocal filetype=rust
@@ -161,16 +169,55 @@ let g:LanguageClient_autoStart = 1
 let g:rustfmt_autosave = 0
 let g:LanguageClient_loggingLevel = 'DEBUG'
 
-" Maps K to hover, gd to goto definition, F2 to rename
-nnoremap <silent> K :call LanguageClient_textDocument_hover()
-nnoremap <silent> <F2> :call LanguageClient_textDocument_rename()
-nnoremap <silent> <D-o> :call LanguageClient_workspace_symbol() <CR>
-nnoremap <silent> <D-b> :call LanguageClient_textDocument_references() <CR>
-nnoremap <silent> gd :call LanguageClient_textDocument_definition()<CR>
-nnoremap <silent> <D-d> :call LanguageClient#debugInfo() <CR> 
-noremap <silent> S :call LanguageClient_textDocument_documentSymbol()<CR>
 
 " au FileType rust nmap gd <Plug>(rust-def)
+
+" coc
+" GoTo code navigation.
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+
+" Use tab for trigger completion with characters ahead and navigate.
+" NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
+" other plugin before putting this into your config.
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
+" Use <c-space> to trigger completion.
+inoremap <silent><expr> <c-space> coc#refresh()
+
+" Use K to show documentation in preview window.
+nnoremap <silent> K :call <SID>show_documentation()<CR>
+
+function! s:show_documentation()
+  if (index(['vim','help'], &filetype) >= 0)
+    execute 'h '.expand('<cword>')
+  else
+    call CocAction('doHover')
+  endif
+endfunction
+
+nmap <leader>rn <Plug>(coc-rename)
+" /end coc
+
+autocmd BufReadPost *.java setlocal filetype=java
+let java_highlight_functions = 1
+let java_highlight_all = 1
+
+" Some more highlights, in addition to those suggested by cmcginty
+highlight link javaScopeDecl Statement
+highlight link javaType Type
+highlight link javaDocTags PreProc
 
 " vim wiki:
 let g:vimwiki_list = [{'path': '~/Dropbox/notes', 'syntax': 'markdown'}, {'path': '~/Dropbox/notes/diary/'}]
@@ -206,3 +253,13 @@ set diffopt+=vertical
 
 " Haskell related
 nnoremap <Leader>th :sp<CR>:term<CR>:set syntax=haskell<CR><C-W>J:resize 8<CR>ighcid -c "stack ghci main.hs" -T "main"<CR>
+
+ "NERd commenter
+nmap <D-/> :call NERDComment(0, 'Toggle')<CR>
+
+" semshi
+g:semshi#filetypes ['python']
+
+" deoplete
+let g:deoplete#auto_complete_delay = 100
+
